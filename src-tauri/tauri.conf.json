@@ -7,8 +7,8 @@
     "withGlobalTauri": true
   },
   "package": {
-    "productName": "notes",
-    "version": "0.0.0"
+    "productName": "mini",
+    "version": "0.0.1"
   },
   "tauri": {
     "allowlist": {
@@ -72,7 +72,7 @@
         "digestAlgorithm": "sha256",
         "timestampUrl": "",
         "webviewInstallMode": {
-          "type": "offlineInstaller"
+          "type": "embedBootstrapper"
         }
       }
     },

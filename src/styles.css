@@ -36,6 +36,7 @@ textarea{
     height: 300px; 
 
     display: flex; */
+    margin-top: 30px;
 }
  
 textarea:focus {
