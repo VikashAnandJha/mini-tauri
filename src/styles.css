@@ -98,4 +98,46 @@ textarea:focus {
     background: gray; 
   }
 
+  .list-container{
+    
+    
+    height: 100vh;
+    margin-top: 30px;
+    position: fixed;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    width: 100%;
+}
+
+  .note-list{
+   
+    display: block;
+    padding: 10px;
+    width: 100%;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: none;
+    
+  }
+  .note-list:hover{
+    background-color: #e1e19d;
+  }
+
+  .new-note{
+    background-color: #ffff99;
+    padding: 5px;
+float: left;    
+text-align: center;
+cursor: pointer;
+
+  }
+  .new-note:hover{
+    background-color: #e1e19d;
+  }
+
+  .title-text>input{
+    background-color: #f9f995;
+    border: 0px;
+  }
+
   
