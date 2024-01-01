@@ -1,7 +1,7 @@
 # Mini - Simple Note-Taking App
 
 Mini is a lightweight note-taking application designed for Windows, macOS, and Linux. It is built using the Tauri framework, Next.js for the frontend, and Ant Design for the user interface.
-![Mini App](/public/mini_logo.png)
+![Mini App](public/mini_logo.png)
 
 ## Features
 
