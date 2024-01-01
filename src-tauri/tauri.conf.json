@@ -4,7 +4,7 @@
     "beforeBuildCommand": "npm run build",
     "beforeDevCommand": "npm run dev",
     "devPath": "http://localhost:3000",
-    "distDir": ".../build"
+    "distDir": "../out"
   },
   "package": {
     "productName": "mini",
@@ -92,7 +92,8 @@
         "title": "mini",
         "width": 300,
         "alwaysOnTop": true,
-        "decorations": false
+        "decorations": false,
+        "theme": "Light"
       }
     ]
   }

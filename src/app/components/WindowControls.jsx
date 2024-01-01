@@ -35,6 +35,11 @@ const WindowControls = ({ showDrawer, noteTitle }) => {
 
     const toggleFullscreen = async () => {
         appWindow.toggleMaximize()
+
+        console.log(await appWindow.theme())
+
+
+
     };
 
     return (

@@ -11,6 +11,7 @@ import { createDir, BaseDirectory, existsSync, writeTextFile, exists, readTextFi
 
 import { DEFAULT_FILE_NAME, DEFAULT_CONTENT } from './Config'
 import TextArea from 'antd/es/input/TextArea';
+import VirtualList from 'rc-virtual-list';
 
 function App() {
     const [notesList, setNotesList] = useState([])
@@ -47,13 +48,14 @@ function App() {
     };
     const handleNewNotes = () => {
 
+        if (!(newNoteTitle.length > 0)) return;
 
         // Find the max id using reduce
         const maxId = notesList.reduce((max, book) => (book.id > max ? book.id : max), 0);
 
         console.log("Maximum ID:", maxId);
 
-        const dataToInsert = { id: maxId + 1, title: newNoteTitle, content: 'Test new content about ' + newNoteTitle }
+        const dataToInsert = { id: maxId + 1, title: newNoteTitle, content: 'Write something about ' + newNoteTitle }
         console.log('data to insert', dataToInsert)
         setNotesList((prevNotesList) => [dataToInsert, ...prevNotesList]);
         // // Clear the input field after adding a note
@@ -61,6 +63,7 @@ function App() {
 
         console.log(notesList);
 
+        handleNoteSelection(dataToInsert)
 
     }
 
@@ -238,31 +241,33 @@ function App() {
                         width: '100%',
                     }}
                 >
-                    <Input placeholder='Enter note title' value={newNoteTitle} onChange={(e) => setnewNoteTitle(e.target.value)} />
-                    <Button type="primary" onClick={(e) => handleNewNotes(e.currentTarget.value)}>Add Note</Button>
+                    <Input style={{
+                        backgroundColor: '#EAEAAe', color: 'black'
+                    }} placeholder='Enter note title' value={newNoteTitle} onChange={(e) => setnewNoteTitle(e.target.value)} />
+                    <Button type="primary" onClick={(e) => handleNewNotes(e.currentTarget.value)}>+</Button>
                 </Space.Compact>
                 <Divider orientation="left">Recent Notes</Divider>
-                <List
-                    style={{
-                        // Adjust the maximum height as needed
-                        overflowY: 'auto',
+                <List>
+                    <VirtualList
+                        data={notesList}
+                        height={300}
+                        itemHeight={47}
 
 
-                    }}
+                    >
+                        {(item) => (
+                            <List.Item>
+                                <List.Item.Meta
+                                    avatar={<EditTwoTone />}
+                                    title={item.title}
+                                    onClick={() => handleNoteSelection(item)}
 
-                    itemLayout="horizontal"
-                    dataSource={notesList}
-                    renderItem={(item, index) => (
-                        <List.Item>
-                            <List.Item.Meta
-                                avatar={<EditTwoTone />}
-                                title={item.title}
-                                onClick={() => handleNoteSelection(item)}
+                                />
+                            </List.Item>
+                        )}
+                    </VirtualList>
+                </List>
 
-                            />
-                        </List.Item>
-                    )}
-                />
             </Drawer>
 
         </div >
