@@ -1,0 +1,143 @@
+body{
+    background-color: #ffff99;
+    padding: 0px;
+    margin: 0px;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+textarea{
+ background-color: #ffff99;
+ 
+
+  
+    border: 0px; 
+    text-align: left;
+    align-items: flex-start;
+    justify-content: top;
+    font-size: 16px; 
+    font-family: system-ui, 'Segoe UI', sans-serif;
+    overflow-y: scroll;  
+    overflow-x: hidden;
+   height: 100vh;
+   
+   padding: 5px;
+   flex: 1;
+    
+    
+}
+
+.container{
+    display: flex;
+    width: 100vw;
+    /* overflow-y: scroll;
+    overflow-x: hidden;
+    margin-top: 30px;
+   
+    height: 300px; 
+
+    display: flex;  */
+    margin-top: 30px;
+}
+ 
+textarea:focus {
+    outline: none !important;
+    border:0px solid green;
+    /* box-shadow: 0 0 10px #719ECE; */
+  }
+.title-text{
+    padding: 5px;
+    float: left;
+    
+}
+.titlebar-menu{
+    display: flex;
+    justify-content: flex-end;
+    flex: 1;
+}
+  .titlebar {
+    height: 30px;
+    background: #f9f995;
+    user-select: none;
+    display: flex;
+    justify-content: flex-start;
+  
+    top: 0;
+    left: 0;
+    right: 0;
+    position: fixed;
+  }
+  .titlebar-button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+  }
+  .titlebar-button:hover {
+    background: #5bbec3;
+  }
+
+  /* width */
+::-webkit-scrollbar {
+    width: 7px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+     border-radius: 10px;
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: rgb(186, 186, 186); 
+    border-radius: 10px;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: gray; 
+  }
+
+  .list-container{
+    
+    
+    height: 100vh;
+    margin-top: 30px;
+    position: fixed;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    width: 100%;
+}
+
+  .note-list{
+   
+    display: block;
+    padding: 10px;
+    width: 100%;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: none;
+    
+  }
+  .note-list:hover{
+    background-color: #e1e19d;
+  }
+
+  .new-note{
+    background-color: #ffff99;
+    padding: 5px;
+float: left;    
+text-align: center;
+cursor: pointer;
+
+  }
+  .new-note:hover{
+    background-color: #e1e19d;
+  }
+
+  .title-text>input{
+    background-color: #f9f995;
+    border: 0px;
+  }
+
+  
