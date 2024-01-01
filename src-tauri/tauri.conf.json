@@ -1,14 +1,14 @@
 {
+  "$schema": "../node_modules/@tauri-apps/cli/schema.json",
   "build": {
-    "beforeDevCommand": "",
-    "beforeBuildCommand": "",
-    "devPath": "../src",
-    "distDir": "../src",
-    "withGlobalTauri": true
+    "beforeBuildCommand": "npm run build",
+    "beforeDevCommand": "npm run dev",
+    "devPath": "http://localhost:3000",
+    "distDir": "../out"
   },
   "package": {
     "productName": "mini",
-    "version": "0.0.1"
+    "version": "0.0.2"
   },
   "tauri": {
     "allowlist": {
@@ -17,17 +17,20 @@
         "all": false,
         "open": true
       },
+      "os": {
+        "all": true
+      },
       "window": {
         "all": true
-         
-        
       },
       "path": {
         "all": true
       },
       "fs": {
         "all": true,
-        "scope": ["$DESKTOP/*"],
+        "scope": [
+          "$DESKTOP/*"
+        ],
         "readFile": true,
         "writeFile": true,
         "readDir": true,
@@ -41,7 +44,6 @@
     },
     "bundle": {
       "active": true,
-       
       "category": "DeveloperTool",
       "copyright": "",
       "deb": {
@@ -87,11 +89,11 @@
         "fullscreen": false,
         "height": 500,
         "resizable": true,
-        "title": "notes",
+        "title": "mini",
         "width": 300,
-        "alwaysOnTop": true, 
-        "decorations": false
-        
+        "alwaysOnTop": true,
+        "decorations": false,
+        "theme": "Light"
       }
     ]
   }

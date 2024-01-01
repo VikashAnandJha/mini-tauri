@@ -1,14 +1,26 @@
 {
-  "name": "notes",
+  "name": "mini-tauri-2.0",
+  "version": "0.1.0",
   "private": true,
-  "version": "0.0.0",
-  "type": "module",
   "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
     "tauri": "tauri"
   },
-  "devDependencies": {
-    "@tauri-apps/cli": "^1.2.2"
+  "dependencies": {
+    "@tauri-apps/api": "^1.5.3",
+    "antd": "^5.12.6",
+    "detect-node": "^2.1.0",
+    "next": "14.0.4",
+    "rc-virtual-list": "^3.11.3",
+    "react": "^18",
+    "react-dom": "^18"
   },
-  "dependencies": { 
+  "devDependencies": {
+    "@tauri-apps/cli": "^1.5.9",
+    "eslint": "^8",
+    "eslint-config-next": "14.0.4"
   }
 }
