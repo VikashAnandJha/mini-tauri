@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Space } from 'antd';
 import {
     CloseOutlined,
@@ -8,9 +8,22 @@ import {
     FileAddOutlined
 
 } from '@ant-design/icons';
-import { appWindow } from '@tauri-apps/api/window';
-
+//import { appWindow } from '@tauri-apps/api/window'
 const WindowControls = ({ showDrawer, noteTitle }) => {
+
+    const [appWindow, setAppWindow] = useState()
+
+    // Import appWindow and save it inside the state for later usage
+    async function setupAppWindow() {
+
+        const appWindow = (await import('@tauri-apps/api/window')).appWindow
+        setAppWindow(appWindow)
+
+    }
+
+    useEffect(() => {
+        setupAppWindow()
+    }, [])
 
     const minimizeWindow = () => {
         appWindow.minimize()

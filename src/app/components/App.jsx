@@ -5,26 +5,34 @@ import React, { useEffect, useState } from 'react'
 import {
     EditTwoTone
 } from '@ant-design/icons';
-import WindowControls from './WindowControls';
+import WindowControls from './WindowControls'
 
 import { createDir, BaseDirectory, existsSync, writeTextFile, exists, readTextFile } from '@tauri-apps/api/fs';
-import { desktopDir } from '@tauri-apps/api/path';
-import * as fs from '@tauri-apps/api/fs'
+
 import { DEFAULT_FILE_NAME, DEFAULT_CONTENT } from './Config'
-import { appWindow } from '@tauri-apps/api/window';
 import TextArea from 'antd/es/input/TextArea';
 
 function App() {
     const [notesList, setNotesList] = useState([])
     const [currentTitle, setCurrentTitle] = useState('')
     const [open, setOpen] = useState(false);
-
     const [selectedNote, setselectedNote] = useState({})
     const [textAreaInput, settextAreaInput] = useState('')
+    const [desktopDir, setDesktopDir] = useState(null);
 
     const [newNoteTitle, setnewNoteTitle] = useState('')
     const [messageApi, contextHolder] = message.useMessage();
-    const fileError = () => {
+    useEffect(() => {
+        // Dynamically import desktopDir
+        import('@tauri-apps/api/path').then((pathModule) => {
+            const { desktopDir } = pathModule;
+            // Set the desktopDir in the state
+            setDesktopDir(desktopDir);
+        });
+    }, []); // The empty dependency array ensures that this effect runs only once when the component mounts
+
+    const fileError = (e) => {
+        console.log(e)
         messageApi.open({
             type: 'error',
             content: 'mini storage file is corupted. Delete(Desktop/miniData.txt) ',
@@ -57,46 +65,48 @@ function App() {
     }
 
     async function check() {
-        const desktopPath = await desktopDir();
+        import('@tauri-apps/api/path').then(async (pathModule) => {
+            const { desktopDir } = pathModule;
+            // Now you can use desktopDir here
+            console.log(desktopDir());
 
-        console.log(desktopPath)
+            try {
+                const desktopPath = await desktopDir()
 
-        let already = await exists(desktopPath + DEFAULT_FILE_NAME)
+                console.log(desktopPath)
 
-        let contents = JSON.stringify(DEFAULT_CONTENT)
-        if (!already) {
-            console.log("file not exists. creating a new file")
-            await writeTextFile(DEFAULT_FILE_NAME, JSON.stringify(DEFAULT_CONTENT), { dir: BaseDirectory.Desktop })
-        }
-        else {
-            console.log("file exists")
-            contents = await readTextFile(DEFAULT_FILE_NAME, { dir: BaseDirectory.Desktop });
+                let already = await exists(desktopPath + DEFAULT_FILE_NAME)
 
+                let contents = JSON.stringify(DEFAULT_CONTENT)
+                if (!already) {
+                    console.log("file not exists. creating a new file")
+                    await writeTextFile(DEFAULT_FILE_NAME, JSON.stringify(DEFAULT_CONTENT), { dir: BaseDirectory.Desktop })
+                }
+                else {
+                    console.log("file exists")
+                    contents = await readTextFile(DEFAULT_FILE_NAME, { dir: BaseDirectory.Desktop });
 
+                }
 
-            //
+                setNotesList(JSON.parse(contents))
+                let notesJson = JSON.parse(contents)
 
-        }
+                if (notesJson.length > 0) {
+                    console.log(notesJson[0])
+                    setselectedNote(notesJson[0])
+                    console.log(selectedNote)
 
+                    setCurrentTitle(notesJson[0].title)
+                    settextAreaInput(notesJson[0].content)
+                } else {
 
-        try {
-            setNotesList(JSON.parse(contents))
-            let notesJson = JSON.parse(contents)
-
-            if (notesJson.length > 0) {
-                console.log(notesJson[0])
-                setselectedNote(notesJson[0])
-                console.log(selectedNote)
-
-                setCurrentTitle(notesJson[0].title)
-                settextAreaInput(notesJson[0].content)
-            } else {
+                }
+            } catch (e) {
+                fileError(e)
 
             }
-        } catch (e) {
-            fileError()
 
-        }
+        });
 
 
 
@@ -125,6 +135,7 @@ function App() {
 
 
     useEffect(() => {
+
         check();
     }, [])
 
@@ -135,11 +146,11 @@ function App() {
 
 
         console.log(textAreaInput);
-        appWindow.setTitle("Saving..")
-        setTimeout(function () {
+        // appWindow.setTitle("Saving..")
+        // setTimeout(function () {
 
-            appWindow.setTitle("mini")
-        }, 500)
+        //     appWindow.setTitle("mini")
+        // }, 500)
         await writeTextFile(DEFAULT_FILE_NAME, JSON.stringify(notesList), { dir: BaseDirectory.Desktop })
         console.log("file saved...");
         console.log("new data", textAreaInput);
@@ -245,7 +256,7 @@ function App() {
                         <List.Item>
                             <List.Item.Meta
                                 avatar={<EditTwoTone />}
-                                title={<h3>{item.title}</h3>}
+                                title={item.title}
                                 onClick={() => handleNoteSelection(item)}
 
                             />
