@@ -1,5 +1,5 @@
 'use client'
-import { List, Space, Input, Button, Avatar, Divider, Flex, Radio, Drawer } from 'antd'
+import { List, Space, Input, Button, Avatar, Divider, Flex, Radio, Drawer, message, Result, Empty } from 'antd'
 import React, { useEffect, useState } from 'react'
 
 import {
@@ -14,7 +14,6 @@ import { DEFAULT_FILE_NAME, DEFAULT_CONTENT } from './Config'
 import { appWindow } from '@tauri-apps/api/window';
 import TextArea from 'antd/es/input/TextArea';
 
-
 function App() {
     const [notesList, setNotesList] = useState([])
     const [currentTitle, setCurrentTitle] = useState('')
@@ -24,7 +23,13 @@ function App() {
     const [textAreaInput, settextAreaInput] = useState('')
 
     const [newNoteTitle, setnewNoteTitle] = useState('')
-
+    const [messageApi, contextHolder] = message.useMessage();
+    const fileError = () => {
+        messageApi.open({
+            type: 'error',
+            content: 'mini storage file is corupted. Delete(Desktop/miniData.txt) ',
+        });
+    };
 
     const showDrawer = () => {
         setOpen(true);
@@ -68,19 +73,32 @@ function App() {
             contents = await readTextFile(DEFAULT_FILE_NAME, { dir: BaseDirectory.Desktop });
 
 
+
             //
 
         }
 
 
-        setNotesList(JSON.parse(contents))
-        let notesJson = JSON.parse(contents)
-        console.log(notesJson[0])
-        setselectedNote(notesJson[0])
-        console.log(selectedNote)
+        try {
+            setNotesList(JSON.parse(contents))
+            let notesJson = JSON.parse(contents)
 
-        setCurrentTitle(notesJson[0].title)
-        settextAreaInput(notesJson[0].content)
+            if (notesJson.length > 0) {
+                console.log(notesJson[0])
+                setselectedNote(notesJson[0])
+                console.log(selectedNote)
+
+                setCurrentTitle(notesJson[0].title)
+                settextAreaInput(notesJson[0].content)
+            } else {
+
+            }
+        } catch (e) {
+            fileError()
+
+        }
+
+
 
     }
 
@@ -146,18 +164,53 @@ function App() {
     return (
 
         <div style={{ padding: 0, backgroundColor: '#C8E3BA' }}>
+            {contextHolder}
             <WindowControls noteTitle={currentTitle} showDrawer={showDrawer} />
-            <TextArea
-                style={{
-                    height: '93vh',
-                    border: 0,
 
-                    backgroundColor: '#C8E3BA'
+            {notesList.length == 0 && <div style={{ padding: 15 }}>
+
+                <Empty
+                    image={<img src={`./mini_logo.png`} alt="Logo" />}
+
+                    imageStyle={{
+                        height: 60,
+                    }}
+                    description={
+                        <span>
+                            Welcome to <b>mini</b>
+
+                            <div>  A simple note-taking app which works in offline mode.
+                                <span> MINI is open-source
+                                </span>
+                            </div>
+
+
+                        </span>
+                    }
+                >
+                    <Button type="primary" onClick={() => setOpen(true)}>New Note</Button>
+                </Empty>
+            </div>}
+
+            {
+                notesList.length > 0 &&
+
+
+                <TextArea
+                    style={{
+                        height: '93vh',
+                        border: 0,
+
+                        backgroundColor: '#C8E3BA'
 
 
 
-                }}
-                value={textAreaInput} onChange={(e) => settextAreaInput(e.target.value)} placeholder="Enter something" />
+                    }}
+                    value={textAreaInput} onChange={(e) => settextAreaInput(e.target.value)} placeholder="Enter something" />
+
+
+            }
+
 
 
 
@@ -174,7 +227,7 @@ function App() {
                         width: '100%',
                     }}
                 >
-                    <Input value={newNoteTitle} onChange={(e) => setnewNoteTitle(e.target.value)} />
+                    <Input placeholder='Enter note title' value={newNoteTitle} onChange={(e) => setnewNoteTitle(e.target.value)} />
                     <Button type="primary" onClick={(e) => handleNewNotes(e.currentTarget.value)}>Add Note</Button>
                 </Space.Compact>
                 <Divider orientation="left">Recent Notes</Divider>
@@ -201,7 +254,7 @@ function App() {
                 />
             </Drawer>
 
-        </div>
+        </div >
     )
 }
 

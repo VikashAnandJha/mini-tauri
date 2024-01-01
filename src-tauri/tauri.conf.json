@@ -7,8 +7,8 @@
     "distDir": ".../build"
   },
   "package": {
-    "productName": "mini-tauri-2.0",
-    "version": "0.1.0"
+    "productName": "mini",
+    "version": "0.0.2"
   },
   "tauri": {
     "allowlist": {
@@ -57,7 +57,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "com.vaj.mini",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
@@ -72,7 +72,10 @@
       "windows": {
         "certificateThumbprint": null,
         "digestAlgorithm": "sha256",
-        "timestampUrl": ""
+        "timestampUrl": "",
+        "webviewInstallMode": {
+          "type": "embedBootstrapper"
+        }
       }
     },
     "security": {
