@@ -9,21 +9,21 @@ import WindowControls from './WindowControls';
 
 import { createDir, BaseDirectory, existsSync, writeTextFile, exists, readTextFile } from '@tauri-apps/api/fs';
 import { desktopDir } from '@tauri-apps/api/path';
-
+import * as fs from '@tauri-apps/api/fs'
+import { DEFAULT_FILE_NAME, DEFAULT_CONTENT } from './Config'
 import { appWindow } from '@tauri-apps/api/window';
 import TextArea from 'antd/es/input/TextArea';
-const bookTitles = [
-    "The Great Gatsby",
-    "To Kill a Mockingbird",
-    "1984",
-    "The Catcher in the Rye",
-];
+
+
 function App() {
-    const [notesList, setNotesList] = useState(bookTitles)
-    const [currentTitle, setCurrentTitle] = useState('blank')
+    const [notesList, setNotesList] = useState([])
+    const [currentTitle, setCurrentTitle] = useState('')
     const [open, setOpen] = useState(false);
 
+    const [selectedNote, setselectedNote] = useState({})
     const [textAreaInput, settextAreaInput] = useState('')
+
+
     const showDrawer = () => {
         setOpen(true);
     };
@@ -32,13 +32,17 @@ function App() {
     };
     const handleNewNotes = () => {
 
-        console.log(currentTitle);
-        // Avoid modifying the original array in place
-        setNotesList((prevNotesList) => [currentTitle, ...prevNotesList]);
-        // Clear the input field after adding a note
-        // setCurrentTitle('');
+        // Update the title and content of book with id 2
+        updateBookById(2, "New Title for Book 2", "New Content for Book 2");
 
-        console.log(notesList);
+
+        // console.log(currentTitle);
+        // // Avoid modifying the original array in place
+        //setNotesList((prevNotesList) => [...prevNotesList]);
+        // // Clear the input field after adding a note
+        // // setCurrentTitle('');
+
+        // console.log(notesList);
     }
 
     async function check() {
@@ -46,37 +50,54 @@ function App() {
 
         console.log(desktopPath)
 
-        let already = await exists(desktopPath + "mini_data2.txt")
+        let already = await exists(desktopPath + DEFAULT_FILE_NAME)
 
-        let contents = `
-  Hi 👋,
-  Thanks For choosing mini
-  Its a simple and lightweight note taking app
-  Made for you.
-  You dont need to save the text
-  mini does this automatically for you!
-    
-  Start Writing 🤗
-        
-        
-        `
+        let contents = JSON.stringify(DEFAULT_CONTENT)
         if (!already) {
             console.log("file not exists. creating a new file")
-            await writeTextFile("mini_data2.txt", contents, { dir: BaseDirectory.Desktop })
+            await writeTextFile(DEFAULT_FILE_NAME, JSON.stringify(DEFAULT_CONTENT), { dir: BaseDirectory.Desktop })
         }
         else {
             console.log("file exists")
-            contents = await readTextFile('mini_data2.txt', { dir: BaseDirectory.Desktop });
+            contents = await readTextFile(DEFAULT_FILE_NAME, { dir: BaseDirectory.Desktop });
+
 
             //
 
         }
 
 
-        settextAreaInput(contents)
-        // document.getElementById("textinput").value = contents;
+        setNotesList(JSON.parse(contents))
+        let notesJson = JSON.parse(contents)
+        console.log(notesJson[0])
+        setselectedNote(notesJson[0])
+        console.log(selectedNote)
+
+        setCurrentTitle(notesJson[0].title)
+        settextAreaInput(notesJson[0].content)
 
     }
+
+
+
+    // Function to update the title and content of a book by id
+    function updateBookById(id, newTitle, newContent) {
+        let books = notesList;
+        const index = books.findIndex(book => book.id === id);
+
+        if (index !== -1) {
+            // Update title and content if the book with the given id is found
+            books[index].title = newTitle;
+            books[index].content = newContent;
+            console.log(`Book with id ${id} updated successfully.`);
+        } else {
+            console.log(`Book with id ${id} not found.`);
+        }
+
+
+        setNotesList(books)
+    }
+
 
 
     useEffect(() => {
@@ -85,13 +106,17 @@ function App() {
 
     const saveFile = async (text) => {
 
+        updateBookById(selectedNote.id, selectedNote.title, text);
+        setNotesList((prevNotesList) => [...prevNotesList]);
+
+
         console.log(textAreaInput);
         appWindow.setTitle("Saving..")
         setTimeout(function () {
 
             appWindow.setTitle("mini")
         }, 500)
-        await writeTextFile("mini_data2.txt", text, { dir: BaseDirectory.Desktop })
+        await writeTextFile(DEFAULT_FILE_NAME, JSON.stringify(notesList), { dir: BaseDirectory.Desktop })
         console.log("file saved...");
         console.log("new data", textAreaInput);
     }
@@ -102,10 +127,20 @@ function App() {
             saveFile(textAreaInput)
     }, [textAreaInput])
 
+
+
+    const handleNoteSelection = (item) => {
+        setCurrentTitle(item.title)
+        setselectedNote(item)
+        settextAreaInput(item.content)
+        onClose()
+        console.log(selectedNote)
+    }
+
     return (
 
         <div style={{ padding: 0, backgroundColor: '#C8E3BA' }}>
-            <WindowControls showDrawer={showDrawer} />
+            <WindowControls noteTitle={currentTitle} showDrawer={showDrawer} />
             <TextArea
                 style={{
                     height: '93vh',
@@ -119,9 +154,7 @@ function App() {
                 value={textAreaInput} onChange={(e) => settextAreaInput(e.target.value)} placeholder="Enter something" />
 
 
-            {/* <Button type="primary" onClick={showDrawer}>
-                Open
-            </Button> */}
+
 
             <Drawer
 
@@ -153,7 +186,8 @@ function App() {
                         <List.Item>
                             <List.Item.Meta
                                 avatar={<EditTwoTone />}
-                                title={<h3>{item}</h3>}
+                                title={<h3>{item.title}</h3>}
+                                onClick={() => handleNoteSelection(item)}
 
                             />
                         </List.Item>

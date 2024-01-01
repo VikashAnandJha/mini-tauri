@@ -8,10 +8,9 @@ import {
     FileAddOutlined
 
 } from '@ant-design/icons';
-import { invoke, api } from '@tauri-apps/api/tauri'
 import { appWindow } from '@tauri-apps/api/window';
 
-const WindowControls = ({ showDrawer }) => {
+const WindowControls = ({ showDrawer, noteTitle }) => {
 
     const minimizeWindow = () => {
         appWindow.minimize()
@@ -53,8 +52,9 @@ const WindowControls = ({ showDrawer }) => {
                 style={{
                     flexGrow: 1,
 
-                    alignSelf: 'center'
-                }}>Note titile</div>
+                    alignSelf: 'center',
+                    fontSize: 10
+                }}>{noteTitle}</div>
             <div className='class="titlebar-menu"'>
                 <Space.Compact
                     style={{
