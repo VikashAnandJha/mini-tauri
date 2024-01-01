@@ -23,6 +23,8 @@ function App() {
     const [selectedNote, setselectedNote] = useState({})
     const [textAreaInput, settextAreaInput] = useState('')
 
+    const [newNoteTitle, setnewNoteTitle] = useState('')
+
 
     const showDrawer = () => {
         setOpen(true);
@@ -32,17 +34,21 @@ function App() {
     };
     const handleNewNotes = () => {
 
-        // Update the title and content of book with id 2
-        updateBookById(2, "New Title for Book 2", "New Content for Book 2");
 
+        // Find the max id using reduce
+        const maxId = notesList.reduce((max, book) => (book.id > max ? book.id : max), 0);
 
-        // console.log(currentTitle);
-        // // Avoid modifying the original array in place
-        //setNotesList((prevNotesList) => [...prevNotesList]);
+        console.log("Maximum ID:", maxId);
+
+        const dataToInsert = { id: maxId + 1, title: newNoteTitle, content: 'Test new content about ' + newNoteTitle }
+        console.log('data to insert', dataToInsert)
+        setNotesList((prevNotesList) => [dataToInsert, ...prevNotesList]);
         // // Clear the input field after adding a note
-        // // setCurrentTitle('');
+        setnewNoteTitle('');
 
-        // console.log(notesList);
+        console.log(notesList);
+
+
     }
 
     async function check() {
@@ -168,7 +174,7 @@ function App() {
                         width: '100%',
                     }}
                 >
-                    <Input value={currentTitle} onChange={(e) => setCurrentTitle(e.target.value)} />
+                    <Input value={newNoteTitle} onChange={(e) => setnewNoteTitle(e.target.value)} />
                     <Button type="primary" onClick={(e) => handleNewNotes(e.currentTarget.value)}>Add Note</Button>
                 </Space.Compact>
                 <Divider orientation="left">Recent Notes</Divider>
